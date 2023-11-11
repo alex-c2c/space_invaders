@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1c8fy04ldoti"]
+
+[ext_resource type="Script" path="res://scripts/EnemyBase.cs" id="1_d52k7"]
+[ext_resource type="AudioStream" uid="uid://bcxxa08blxyed" path="res://audio/enemy explosion.wav" id="3_j2n1o"]
+[ext_resource type="AudioStream" uid="uid://cf5sp6lto0nut" path="res://audio/shoot.wav" id="4_xbs74"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qfhoj"]
+size = Vector2(8, 8)
+
+[node name="EnemyBase" type="Area2D"]
+script = ExtResource("1_d52k7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1.90735e-07, 1.90735e-07)
+shape = SubResource("RectangleShape2D_qfhoj")
+
+[node name="AudioHit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_j2n1o")
+
+[node name="AudioFire" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_xbs74")

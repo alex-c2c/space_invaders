@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://nnp20idc7ds7"]
+
+[ext_resource type="Script" path="res://scripts/Bullet.cs" id="1_e3qvu"]
+[ext_resource type="Texture2D" uid="uid://djj2tmhcplgxn" path="res://sprites/pico8_invaders_sprites_LARGE.png" id="2_bhhrr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u8dwj"]
+size = Vector2(4, 4)
+
+[node name="Bullet" type="Area2D"]
+scale = Vector2(5, 5)
+script = ExtResource("1_e3qvu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1.43051e-07, 9.53674e-08)
+shape = SubResource("RectangleShape2D_u8dwj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_bhhrr")
+region_enabled = true
+region_rect = Rect2(10, 58, 4, 4)

@@ -1,0 +1,161 @@
+[gd_scene load_steps=8 format=3 uid="uid://crr3olt5jy7oq"]
+
+[ext_resource type="Script" path="res://scripts/Main.cs" id="1_6tdkp"]
+[ext_resource type="PackedScene" uid="uid://dwtc5gvv5o0pj" path="res://scenes/characters/Barrier.tscn" id="1_u8m54"]
+[ext_resource type="PackedScene" uid="uid://cck65et50a01f" path="res://scenes/characters/Player.tscn" id="1_ubqw7"]
+[ext_resource type="Script" path="res://scripts/EnemyHive.cs" id="4_jlyi4"]
+[ext_resource type="PackedScene" uid="uid://dw6mncysdvjsx" path="res://scenes/characters/Enemy1.tscn" id="5_amv31"]
+[ext_resource type="Texture2D" uid="uid://djj2tmhcplgxn" path="res://sprites/pico8_invaders_sprites_LARGE.png" id="6_be7pa"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uhtpp"]
+
+[node name="Main" type="Node2D" node_paths=PackedStringArray("_menu", "_enemyHive", "_labelHighscore", "_labelScore", "_spriteLivesArray")]
+script = ExtResource("1_6tdkp")
+_menu = NodePath("Menu")
+_enemyHive = NodePath("EnemyHive")
+_labelHighscore = NodePath("UI/LabelHighscore")
+_labelScore = NodePath("UI/LabelScore")
+_spriteLivesArray = [NodePath("UI/Lives/Live1"), NodePath("UI/Lives/Live2"), NodePath("UI/Lives/Live3"), NodePath("UI/Lives/Live4"), NodePath("UI/Lives/Live5")]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 720.0
+offset_bottom = 1280.0
+color = Color(0, 0, 0, 1)
+
+[node name="Player" parent="." instance=ExtResource("1_ubqw7")]
+position = Vector2(360, 1101)
+
+[node name="Barriers" type="Node2D" parent="."]
+
+[node name="Barrier1" parent="Barriers" instance=ExtResource("1_u8m54")]
+position = Vector2(144, 951)
+
+[node name="Barrier2" parent="Barriers" node_paths=PackedStringArray("_audioStreamPlayer", "_animationPlayer") instance=ExtResource("1_u8m54")]
+position = Vector2(287.955, 951)
+_audioStreamPlayer = NodePath("../Barrier1/AudioStreamPlayer")
+_animationPlayer = NodePath("../Barrier1/AnimationPlayer")
+
+[node name="Barrier3" parent="Barriers" node_paths=PackedStringArray("_audioStreamPlayer", "_animationPlayer") instance=ExtResource("1_u8m54")]
+position = Vector2(432, 951)
+_audioStreamPlayer = NodePath("../Barrier1/AudioStreamPlayer")
+_animationPlayer = NodePath("../Barrier1/AnimationPlayer")
+
+[node name="Barrier4" parent="Barriers" node_paths=PackedStringArray("_audioStreamPlayer", "_animationPlayer") instance=ExtResource("1_u8m54")]
+position = Vector2(576, 951)
+_audioStreamPlayer = NodePath("../Barrier1/AudioStreamPlayer")
+_animationPlayer = NodePath("../Barrier1/AnimationPlayer")
+
+[node name="EnemyHive" type="Node2D" parent="."]
+script = ExtResource("4_jlyi4")
+
+[node name="Enemy1" parent="EnemyHive" instance=ExtResource("5_amv31")]
+position = Vector2(359, 881)
+
+[node name="Bullets" type="Node2D" parent="."]
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="Lives" type="Node2D" parent="UI"]
+
+[node name="Label" type="Label" parent="UI/Lives"]
+offset_right = 720.0
+offset_bottom = 45.0
+theme_override_font_sizes/font_size = 24
+text = "LIVES "
+horizontal_alignment = 2
+
+[node name="Live1" type="Sprite2D" parent="UI/Lives"]
+texture_filter = 1
+material = SubResource("ShaderMaterial_uhtpp")
+position = Vector2(700, 50)
+scale = Vector2(4, 4)
+texture = ExtResource("6_be7pa")
+region_enabled = true
+region_rect = Rect2(0, 0, 8, 8)
+
+[node name="Live2" type="Sprite2D" parent="UI/Lives"]
+texture_filter = 1
+position = Vector2(660, 50)
+scale = Vector2(4, 4)
+texture = ExtResource("6_be7pa")
+region_enabled = true
+region_rect = Rect2(0, 0, 8, 8)
+
+[node name="Live3" type="Sprite2D" parent="UI/Lives"]
+texture_filter = 1
+position = Vector2(620, 50)
+scale = Vector2(4, 4)
+texture = ExtResource("6_be7pa")
+region_enabled = true
+region_rect = Rect2(0, 0, 8, 8)
+
+[node name="Live4" type="Sprite2D" parent="UI/Lives"]
+texture_filter = 1
+position = Vector2(580, 50)
+scale = Vector2(4, 4)
+texture = ExtResource("6_be7pa")
+region_enabled = true
+region_rect = Rect2(0, 0, 8, 8)
+
+[node name="Live5" type="Sprite2D" parent="UI/Lives"]
+texture_filter = 1
+position = Vector2(540, 50)
+scale = Vector2(4, 4)
+texture = ExtResource("6_be7pa")
+region_enabled = true
+region_rect = Rect2(0, 0, 8, 8)
+
+[node name="LabelScore" type="Label" parent="UI"]
+offset_right = 720.0
+offset_bottom = 90.0
+theme_override_font_sizes/font_size = 24
+text = "Score
+0"
+horizontal_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="LabelHighscore" type="Label" parent="UI"]
+offset_left = 5.0
+offset_right = 121.0
+offset_bottom = 74.0
+theme_override_font_sizes/font_size = 24
+text = "Highscore
+0"
+metadata/_edit_lock_ = true
+
+[node name="Menu" type="Node2D" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="Menu"]
+offset_right = 720.0
+offset_bottom = 1280.0
+color = Color(0, 0, 0, 0.501961)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu"]
+offset_left = 150.0
+offset_right = 570.0
+offset_bottom = 1280.0
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="Label" type="Label" parent="Menu/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "GAME PAUSED"
+horizontal_alignment = 1
+
+[node name="ButtonReset" type="Button" parent="Menu/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+text = "Reset"
+
+[node name="ButtonQuit" type="Button" parent="Menu/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+text = "Quit"
+
+[connection signal="visibility_changed" from="Menu" to="." method="_on_menu_visibility_changed"]
+[connection signal="pressed" from="Menu/VBoxContainer/ButtonReset" to="." method="_on_button_reset_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/ButtonQuit" to="." method="_on_button_quit_pressed"]
