@@ -24,6 +24,11 @@ public sealed class GameManager
         set;
     } = false;
 
+    public static int Score
+    {
+        get;
+        set;
+    } = 0;
     public static int Highscore
     {
         get;
@@ -109,11 +114,11 @@ public sealed class GameManager
         }
     }
 
-	public static async void SetHighscore(int newHighscore)
+	public static async void SetHighscore()
 	{
-        if (newHighscore > Highscore)
+        if (Score > Highscore)
         {
-            Highscore = newHighscore;
+            Highscore = Score;
             await SaveHighscoreData();
         }
 	}

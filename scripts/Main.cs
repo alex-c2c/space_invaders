@@ -19,6 +19,9 @@ public partial class Main : Node2D
 	[Export]
 	private Sprite2D[] _spriteLivesArray;
 
+	[Export]
+	private Enemy _enemy;
+
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -28,6 +31,13 @@ public partial class Main : Node2D
 		Player player = GetNode<Player>("Player");
 		player.Connect(Player.SignalName.LiveChange, new Callable(this, MethodName._on_player_live_change));
 		player.Connect(Player.SignalName.Die, new Callable(this, MethodName._on_player_die));
+
+		//_sprite.Material = new ShaderMaterial() { Shader = (_sprite.Material as ShaderMaterial).Shader.Duplicate() as Shader };
+		foreach (Sprite2D sprite in _spriteLivesArray)
+		{
+			//ShaderMaterial material = ResourceLoader.Load<ShaderMaterial>(Godot.ProjectSettings.GlobalizePath("res://shaders/Monochrome.gdshader")) ;
+			//sprite.Material = material;
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -38,6 +48,11 @@ public partial class Main : Node2D
 			AudioManager.PlaySFX(_menu.IsVisibleInTree() ? AudioManager.Sfx.Cancel : AudioManager.Sfx.Menu, this);
 
 			ToggleMenu();
+		}
+
+		if (Input.IsActionJustPressed("ui_accept"))
+		{
+			_enemy.FireBullet();
 		}
 	}
 
@@ -90,11 +105,33 @@ public partial class Main : Node2D
 
 	private void _on_player_live_change(int currentLives)
 	{
-		Debug.Print($"live change: {currentLives}");
+		UpdateLivesIcon(currentLives);
 	}
 
 	private void _on_player_die()
 	{
-		Debug.Print($"Player die");
+		GameManager.SetHighscore();
+	}
+
+	private void UpdateHighScoreLabel()
+	{
+		_labelHighscore.Text = $"Highscore\n{GameManager.Highscore}";
+	}
+
+	private void UpdateScoreLabel()
+	{
+		_labelScore.Text = $"Score\n{GameManager.Score}";
+	}
+
+	private void UpdateLivesIcon(int currentLives)
+	{
+		for (int i = 0; i < _spriteLivesArray.Length; i++)
+		{
+			Sprite2D sprite = _spriteLivesArray[i];
+			if (sprite.Material is ShaderMaterial shaderMaterial)
+			{
+				shaderMaterial.SetShaderParameter("_isOn", i >= currentLives);
+			}
+		}
 	}
 }

@@ -36,15 +36,15 @@ public partial class Player : Character
 
 		if (input > 0)
 		{
-			_animationPlayer.Play("MoveLeft");
+			_animationPlayer?.Play("MoveLeft");
 		}
 		else if (input < 0)
 		{
-			_animationPlayer.Play("MoveRight");
+			_animationPlayer?.Play("MoveRight");
 		}
 		else
 		{
-			_animationPlayer.Play("Idle");
+			_animationPlayer?.Play("Idle");
 		}
 
 		if (Input.IsActionJustPressed("ui_accept") && CanFireBullet)
@@ -65,7 +65,7 @@ public partial class Player : Character
 			return;
 		}
 
-		_audioFire.Play(0f);
+		_audioFire?.Play(0f);
 
 		Bullet newBullet = _bulletRes.Instantiate() as Bullet;
 		newBullet.Position = this.Position - new Vector2(0, _pixelSize.Y * 0.5f);
@@ -82,18 +82,19 @@ public partial class Player : Character
 		Lives -= 1;
 		EmitSignal(SignalName.LiveChange, Lives);
 
-		_animationPlayer.Play("Explode");
-		_audioExplode.Play(0f);
+		_animationPlayer?.Play("Explode");
+		_audioExplode?.Play(0f);
 
 		await ToSignal(_animationPlayer, "animation_finished");
+		await ToSignal(_audioExplode, "finished");
 
 		if (Lives > 0)
 		{
-			_animationPlayer.Play("Revive");
+			_animationPlayer?.Play("Revive");
 
 			await ToSignal(_animationPlayer, "animation_finished");
 
-			_animationPlayer.Play("Idle");
+			_animationPlayer?.Play("Idle");
 
 			CanPlay = true;
 		}

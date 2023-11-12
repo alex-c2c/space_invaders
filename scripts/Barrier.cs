@@ -1,59 +1,56 @@
 using Godot;
 using System;
 
-public partial class Barrier : Area2D
+public partial class Barrier : Character
 {
-	[Export]
-	private AudioStreamPlayer _audioStreamPlayer;
-
-	[Export]
-	private AnimationPlayer _animationPlayer;
-
-	
-	public int Lives
-	{
-		get;
-		set;
-	} = Constants.DEFAULT_BARRIER_LIVES;
-
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_animationPlayer.Play("4of4");
+		base._Ready();
+
+		Lives = Constants.DEFAULT_BARRIER_LIVES;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (Input.IsActionJustPressed("ui_accept"))
+
+	}
+
+	public override async void GetHit()
+	{
+		if (!CanPlay)
 		{
-			//GetHit();
+			return;
 		}
-	}
 
-	private void _on_area_entered(Area2D area)
-	{
+		CanPlay = false;
 
-	}
-
-	public async void GetHit()
-	{
 		Lives -= 1;
 
-		_audioStreamPlayer.Play(0f);
-
+		_audioExplode?.Play(0f);
+		_animationPlayer?.Play($"{Lives}of4");
 
 		if (Lives <= 0)
 		{
-			Visible = false;
+			await ToSignal(_audioExplode, "finished");
 
-			await ToSignal(_audioStreamPlayer, "finished");
-			
 			QueueFree();
 		}
-		else
+
+		CanPlay = true;
+	}
+
+	public override void _on_area_entered(Area2D area)
+	{
+		if (area is Bullet bullet)
 		{
-			_animationPlayer.Play($"{Lives}of4");
+			if (bullet.BulletType == Bullet.Type.ENEMY)
+			{
+				GetHit();
+
+				bullet.QueueFree();
+			}
 		}
 	}
 }

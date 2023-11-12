@@ -1,8 +1,10 @@
 [gd_scene load_steps=13 format=3 uid="uid://dwtc5gvv5o0pj"]
 
 [ext_resource type="Script" path="res://scripts/Barrier.cs" id="1_a1p4v"]
-[ext_resource type="Texture2D" uid="uid://csdvulup0gv5t" path="res://sprites/barrier_ss.png" id="1_h606o"]
 [ext_resource type="AudioStream" uid="uid://cmuwr3ai2pqbv" path="res://audio/Block Break 1.wav" id="3_hacfv"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_yaaj8"]
+load_path = "res://.godot/imported/barrier_ss.png-6600a3bb5d349735992aeba02dd53c67.ctex"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_aqngn"]
 size = Vector2(26, 12)
@@ -18,7 +20,7 @@ resource_name = "1of4"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:region_rect")
+tracks/0/path = NodePath("SpriteBody:region_rect")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -69,7 +71,7 @@ resource_name = "2of4"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:region_rect")
+tracks/0/path = NodePath("SpriteBody:region_rect")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -120,7 +122,7 @@ resource_name = "3of4"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:region_rect")
+tracks/0/path = NodePath("SpriteBody:region_rect")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -172,7 +174,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:region_rect")
+tracks/0/path = NodePath("SpriteBody:region_rect")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -223,7 +225,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:region_rect")
+tracks/0/path = NodePath("SpriteBody:region_rect")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -278,15 +280,15 @@ _data = {
 "RESET": SubResource("Animation_hhji3")
 }
 
-[node name="Barrier" type="Area2D" node_paths=PackedStringArray("_audioStreamPlayer", "_animationPlayer")]
+[node name="Barrier" type="Area2D" node_paths=PackedStringArray("_audioExplode", "_animationPlayer")]
 scale = Vector2(3, 3)
 script = ExtResource("1_a1p4v")
-_audioStreamPlayer = NodePath("AudioStreamPlayer")
+_audioExplode = NodePath("AudioExplode")
 _animationPlayer = NodePath("AnimationPlayer")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="SpriteBody" type="Sprite2D" parent="."]
 texture_filter = 1
-texture = ExtResource("1_h606o")
+texture = SubResource("CompressedTexture2D_yaaj8")
 region_enabled = true
 region_rect = Rect2(52, 20, 26, 12)
 
@@ -309,5 +311,7 @@ libraries = {
 "": SubResource("AnimationLibrary_naxdt")
 }
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="AudioExplode" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_hacfv")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

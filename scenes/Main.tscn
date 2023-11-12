@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://crr3olt5jy7oq"]
+[gd_scene load_steps=13 format=3 uid="uid://crr3olt5jy7oq"]
 
 [ext_resource type="Script" path="res://scripts/Main.cs" id="1_6tdkp"]
 [ext_resource type="PackedScene" uid="uid://dwtc5gvv5o0pj" path="res://scenes/characters/Barrier.tscn" id="1_u8m54"]
@@ -6,16 +6,36 @@
 [ext_resource type="Script" path="res://scripts/EnemyHive.cs" id="4_jlyi4"]
 [ext_resource type="PackedScene" uid="uid://dw6mncysdvjsx" path="res://scenes/characters/Enemy1.tscn" id="5_amv31"]
 [ext_resource type="Texture2D" uid="uid://djj2tmhcplgxn" path="res://sprites/pico8_invaders_sprites_LARGE.png" id="6_be7pa"]
+[ext_resource type="Shader" path="res://shaders/Monochrome.gdshader" id="6_x023c"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_uhtpp"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rc6gn"]
+shader = ExtResource("6_x023c")
+shader_parameter/_isOn = false
 
-[node name="Main" type="Node2D" node_paths=PackedStringArray("_menu", "_enemyHive", "_labelHighscore", "_labelScore", "_spriteLivesArray")]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s6sa5"]
+shader = ExtResource("6_x023c")
+shader_parameter/_isOn = false
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dr2ja"]
+shader = ExtResource("6_x023c")
+shader_parameter/_isOn = false
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_28bwa"]
+shader = ExtResource("6_x023c")
+shader_parameter/_isOn = false
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6l3ba"]
+shader = ExtResource("6_x023c")
+shader_parameter/_isOn = false
+
+[node name="Main" type="Node2D" node_paths=PackedStringArray("_menu", "_enemyHive", "_labelHighscore", "_labelScore", "_spriteLivesArray", "_enemy")]
 script = ExtResource("1_6tdkp")
 _menu = NodePath("Menu")
 _enemyHive = NodePath("EnemyHive")
 _labelHighscore = NodePath("UI/LabelHighscore")
 _labelScore = NodePath("UI/LabelScore")
 _spriteLivesArray = [NodePath("UI/Lives/Live1"), NodePath("UI/Lives/Live2"), NodePath("UI/Lives/Live3"), NodePath("UI/Lives/Live4"), NodePath("UI/Lives/Live5")]
+_enemy = NodePath("EnemyHive/Enemy1")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_right = 720.0
@@ -28,28 +48,22 @@ position = Vector2(360, 1101)
 [node name="Barriers" type="Node2D" parent="."]
 
 [node name="Barrier1" parent="Barriers" instance=ExtResource("1_u8m54")]
-position = Vector2(144, 951)
+position = Vector2(76, 1050)
 
-[node name="Barrier2" parent="Barriers" node_paths=PackedStringArray("_audioStreamPlayer", "_animationPlayer") instance=ExtResource("1_u8m54")]
-position = Vector2(287.955, 951)
-_audioStreamPlayer = NodePath("../Barrier1/AudioStreamPlayer")
-_animationPlayer = NodePath("../Barrier1/AnimationPlayer")
+[node name="Barrier2" parent="Barriers" instance=ExtResource("1_u8m54")]
+position = Vector2(226, 1050)
 
-[node name="Barrier3" parent="Barriers" node_paths=PackedStringArray("_audioStreamPlayer", "_animationPlayer") instance=ExtResource("1_u8m54")]
-position = Vector2(432, 951)
-_audioStreamPlayer = NodePath("../Barrier1/AudioStreamPlayer")
-_animationPlayer = NodePath("../Barrier1/AnimationPlayer")
+[node name="Barrier3" parent="Barriers" instance=ExtResource("1_u8m54")]
+position = Vector2(389, 1050)
 
-[node name="Barrier4" parent="Barriers" node_paths=PackedStringArray("_audioStreamPlayer", "_animationPlayer") instance=ExtResource("1_u8m54")]
-position = Vector2(576, 951)
-_audioStreamPlayer = NodePath("../Barrier1/AudioStreamPlayer")
-_animationPlayer = NodePath("../Barrier1/AnimationPlayer")
+[node name="Barrier4" parent="Barriers" instance=ExtResource("1_u8m54")]
+position = Vector2(565, 1050)
 
 [node name="EnemyHive" type="Node2D" parent="."]
 script = ExtResource("4_jlyi4")
 
 [node name="Enemy1" parent="EnemyHive" instance=ExtResource("5_amv31")]
-position = Vector2(359, 881)
+position = Vector2(428, 694)
 
 [node name="Bullets" type="Node2D" parent="."]
 
@@ -66,7 +80,7 @@ horizontal_alignment = 2
 
 [node name="Live1" type="Sprite2D" parent="UI/Lives"]
 texture_filter = 1
-material = SubResource("ShaderMaterial_uhtpp")
+material = SubResource("ShaderMaterial_rc6gn")
 position = Vector2(700, 50)
 scale = Vector2(4, 4)
 texture = ExtResource("6_be7pa")
@@ -75,6 +89,7 @@ region_rect = Rect2(0, 0, 8, 8)
 
 [node name="Live2" type="Sprite2D" parent="UI/Lives"]
 texture_filter = 1
+material = SubResource("ShaderMaterial_s6sa5")
 position = Vector2(660, 50)
 scale = Vector2(4, 4)
 texture = ExtResource("6_be7pa")
@@ -83,6 +98,7 @@ region_rect = Rect2(0, 0, 8, 8)
 
 [node name="Live3" type="Sprite2D" parent="UI/Lives"]
 texture_filter = 1
+material = SubResource("ShaderMaterial_dr2ja")
 position = Vector2(620, 50)
 scale = Vector2(4, 4)
 texture = ExtResource("6_be7pa")
@@ -91,6 +107,7 @@ region_rect = Rect2(0, 0, 8, 8)
 
 [node name="Live4" type="Sprite2D" parent="UI/Lives"]
 texture_filter = 1
+material = SubResource("ShaderMaterial_28bwa")
 position = Vector2(580, 50)
 scale = Vector2(4, 4)
 texture = ExtResource("6_be7pa")
@@ -99,6 +116,7 @@ region_rect = Rect2(0, 0, 8, 8)
 
 [node name="Live5" type="Sprite2D" parent="UI/Lives"]
 texture_filter = 1
+material = SubResource("ShaderMaterial_6l3ba")
 position = Vector2(540, 50)
 scale = Vector2(4, 4)
 texture = ExtResource("6_be7pa")
