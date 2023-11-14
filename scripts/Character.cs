@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -17,10 +16,12 @@ public partial class Character : Area2D
 	private const int FIRE_RESET_TIME_MS = 500;
     private float _tmpAudioFireTime = 0f;
     private float _tmpAudioExplodeTime = 0f;
-
+    protected Vector2 _initialPosition;
 	protected Vector2 _pixelSize;
 	protected PackedScene _bulletRes;
 	protected Node2D _bulletsNode;
+    protected Sprite2D _sprite;
+
 	public bool CanFireBullet
 	{
 		get;
@@ -42,8 +43,13 @@ public partial class Character : Area2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Sprite2D sprite = GetNode("SpriteBody") as Sprite2D;
-		_pixelSize = new Vector2(sprite.Texture.GetWidth() / Constants.SPRITESHEET_H_FRAME * Scale.X, sprite.Texture.GetHeight() / Constants.SPRITESHEET_V_FRAME * Scale.Y);
+        _initialPosition = this.Position;
+
+		_sprite = GetNode("SpriteBody") as Sprite2D;
+
+		_pixelSize = new Vector2(_sprite.Texture.GetWidth() / Constants.SPRITESHEET_H_FRAME * Scale.X, _sprite.Texture.GetHeight() / Constants.SPRITESHEET_V_FRAME * Scale.Y);
+
+        ZeroSpritePosition();
 	}
 
     public override void _Process(double delta)
@@ -64,7 +70,7 @@ public partial class Character : Area2D
         
     }
 
-    public void Pause(bool isPaused)
+    public virtual void Pause(bool isPaused)
     {
         if (isPaused)
         {
@@ -109,8 +115,24 @@ public partial class Character : Area2D
 		CanFireBullet = true;
 	}
 
+    public virtual void Reset()
+    {
+        CanPlay = true;
+        Visible = true;
+    }
+
+    public float GetWidth()
+    {
+        return _pixelSize.X;
+    }
+
+    public void ZeroSpritePosition()
+    {
+        _sprite.Position = Vector2.Zero;
+    }
+
     public virtual void _on_area_entered(Area2D area)
 	{
-        Debug.Print("Character hit");
+        
 	}
 }

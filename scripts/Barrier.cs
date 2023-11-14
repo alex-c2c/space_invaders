@@ -29,28 +29,44 @@ public partial class Barrier : Character
 		Lives -= 1;
 
 		_audioExplode?.Play(0f);
-		_animationPlayer?.Play($"{Lives}of4");
-
+		
 		if (Lives <= 0)
 		{
+			_animationPlayer.Play("Die");
+
 			await ToSignal(_audioExplode, "finished");
 
-			QueueFree();
+			Visible = false;
+
+			return;
 		}
+
+		_animationPlayer?.Play($"{Lives}of4");
+
+		await ToSignal(_animationPlayer, "animation_finished");
 
 		CanPlay = true;
 	}
 
-	public override void _on_area_entered(Area2D area)
+    public override void Reset()
+    {
+        base.Reset();
+
+		Lives = Constants.DEFAULT_BARRIER_LIVES;
+
+		_animationPlayer.Play("4of4");
+    }
+
+    public override void _on_area_entered(Area2D area)
 	{
 		if (area is Bullet bullet)
 		{
 			if (bullet.BulletType == Bullet.Type.ENEMY)
 			{
 				GetHit();
-
-				bullet.QueueFree();
 			}
+
+			bullet.QueueFree();
 		}
 	}
 }

@@ -75,7 +75,7 @@ public sealed class GameManager
         }        
     }
 
-    public static async Task<bool> LoadHighscoreData()
+    public static bool LoadHighscoreData()
     {
         string filePath = Path.Combine(OS.GetUserDataDir(), Constants.HIGHSCORE_FILE);
 
@@ -83,7 +83,7 @@ public sealed class GameManager
 
         if (!File.Exists(filePath))
         {
-            await SaveHighscoreData();
+            //await SaveHighscoreData();
             
             Debug.Print($"Warning: Save file {filePath} does not exist!");
             Debug.Print($"Creating highscore file with default values");

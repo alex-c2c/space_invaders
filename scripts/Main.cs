@@ -1,6 +1,10 @@
 using Godot;
+using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection.Metadata;
 
 public partial class Main : Node2D
 {
@@ -8,7 +12,7 @@ public partial class Main : Node2D
 	private Node2D _menu;
 
 	[Export]
-	private Node2D _enemyHive;
+	private EnemyHive _enemyHive;
 
 	[Export]
 	private Label _labelHighscore;
@@ -17,27 +21,46 @@ public partial class Main : Node2D
 	private Label _labelScore;
 
 	[Export]
+	private Label _LabelMenu;
+
+	[Export]
 	private Sprite2D[] _spriteLivesArray;
 
 	[Export]
-	private Enemy _enemy;
+	private Barrier[] _barrierArray;
 
+	[Export]
+	private Player _player;
+
+	[Export]
+	private Timer _bonusEnemyTimer;
+
+	private LevelData _levelData;
+
+	private double _bonusEnemySpawnTimer;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		_menu.Visible = false;
 
-		Player player = GetNode<Player>("Player");
-		player.Connect(Player.SignalName.LiveChange, new Callable(this, MethodName._on_player_live_change));
-		player.Connect(Player.SignalName.Die, new Callable(this, MethodName._on_player_die));
+		GameManager.LoadHighscoreData();
+		UpdateHighScoreLabel();
 
-		//_sprite.Material = new ShaderMaterial() { Shader = (_sprite.Material as ShaderMaterial).Shader.Duplicate() as Shader };
-		foreach (Sprite2D sprite in _spriteLivesArray)
-		{
-			//ShaderMaterial material = ResourceLoader.Load<ShaderMaterial>(Godot.ProjectSettings.GlobalizePath("res://shaders/Monochrome.gdshader")) ;
-			//sprite.Material = material;
-		}
+		_player = GetNode<Player>("Player");
+		_player.Connect(Player.SignalName.LiveChange, new Callable(this, MethodName._on_player_live_change));
+		_player.Connect(Player.SignalName.Die, new Callable(this, MethodName._on_player_die));
+
+		UpdateLivesIcon(Constants.DEFAULT_PLAYER_LIVES);
+
+		LevelManager.LoadLevelData();
+		EnemyManager.LoadEnemyData();
+
+		_levelData = LevelManager.GetLevelData(1);
+
+		SetupLevel();
+
+		_enemyHive.SetupData(_levelData);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -49,27 +72,107 @@ public partial class Main : Node2D
 
 			ToggleMenu();
 		}
-
-		if (Input.IsActionJustPressed("ui_accept"))
-		{
-			_enemy.FireBullet();
-		}
 	}
 
-	private void ToggleMenu()
+	private void ToggleMenu(bool isGameOver = false)
 	{
+		_LabelMenu.Text = isGameOver ? "GAME OVER" : "GAME PAUSED";
 		_menu.Visible = !GameManager.IsPaused;
-		GameManager.IsPaused = _menu.IsVisibleInTree();
+		GameManager.IsPaused = _bonusEnemyTimer.Paused = _menu.IsVisibleInTree();
 	}
 
 	private void SetupLevel()
 	{
+		if (_levelData == null)
+		{
+			Debug.Print($"Error! Unable to get data for level 1!");
+			return;
+		}
 
+		float x = 0f;
+		float y = 100f;
+
+		Dictionary<int, PackedScene> resDict = new Dictionary<int, PackedScene>();
+		List<string> enemyStringList = _levelData	.EnemyList;
+
+		foreach (string line in enemyStringList)
+		{
+			List<int> list = line.Split(",").Select(Int32.Parse)?.ToList();
+
+			float diffY = 60f;
+			float diffX = 700f / list.Count;
+
+			int index = 0;
+			foreach (int id in list)
+			{
+				bool success = resDict.TryGetValue(id, out PackedScene res);
+
+				if (!success)
+				{
+					res = ResourceLoader.Load(Godot.ProjectSettings.GlobalizePath($"res://scenes/characters/Enemy{id}.tscn")) as PackedScene;
+					resDict[id] = res;
+				}
+
+				if (res != null)
+				{
+					EnemyData enemyData = EnemyManager.GetEnemyData(id);
+					if (enemyData != null)
+					{
+						Enemy enemy = res.Instantiate() as Enemy;
+						enemy.Name = $"Enemy{id}-{index+1}";
+						enemy.SetupData(enemyData);
+						_enemyHive.AddChild(enemy);
+
+						if (x == 0f)
+						{
+							x = enemy.GetWidth() + 15f;
+						}
+
+						enemy.Position = new Vector2(x + diffX * index, y);
+
+						enemy.Connect(Enemy.SignalName.Die, new Callable(this, MethodName._on_enemy_die));
+
+						enemy.StartAnimationIdle();
+					}
+				}
+
+				index++;
+			}
+
+			index = 0;
+			y += diffY;
+		}
+
+		_bonusEnemySpawnTimer = _levelData.BonusEnemySpawnTimeSec;
 	}
 
 	private void ResetLevel()
 	{
+		_enemyHive.Reset();
 
+		foreach (Enemy child in _enemyHive.GetChildren())
+		{
+			child.QueueFree();
+		}
+
+		SetupLevel();
+
+		foreach (Barrier barrier in _barrierArray)
+		{
+			barrier.Reset();
+		}
+
+		_player.Reset();
+		UpdateLivesIcon (_player.Lives);
+
+		Node2D bulletsNode = GetNode("Bullets") as Node2D;
+		foreach (var child in bulletsNode.GetChildren())
+		{
+			child.QueueFree();
+		}
+
+		GameManager.Score = 0;
+		UpdateScoreLabel();
 	}
 
 	private void _on_button_reset_pressed()
@@ -91,16 +194,20 @@ public partial class Main : Node2D
 	}
 
 	private void _on_menu_visibility_changed()
-	{		
-		GetNode<Player>("Player").Pause(_menu.IsVisibleInTree());
+	{
+		bool _menuVisibleInTree = _menu.IsVisibleInTree();
+
+		GetNode<Player>("Player").Pause(_menuVisibleInTree);
 
 		foreach (Node child in _enemyHive.GetChildren())
 		{
 			if (child is Enemy enemy)
 			{
-				enemy.Pause(_menu.IsVisibleInTree());
+				enemy.Pause(_menuVisibleInTree);
 			}
 		}
+
+		GetNode<EnemyBonus>("EnemyBonus").Pause(_menuVisibleInTree);
 	}
 
 	private void _on_player_live_change(int currentLives)
@@ -109,8 +216,33 @@ public partial class Main : Node2D
 	}
 
 	private void _on_player_die()
-	{
+	{		
 		GameManager.SetHighscore();
+
+		ToggleMenu(true);
+
+		GameManager.IsPaused = true;
+	}
+
+	private void _on_enemy_die(int points)
+	{
+		GameManager.Score += points;
+		GameManager.SetHighscore();
+
+		UpdateScoreLabel();
+		UpdateHighScoreLabel();
+	}
+
+	private void _on_bonus_enemy_timer_timeout()
+	{
+		PackedScene res = ResourceLoader.Load(Godot.ProjectSettings.GlobalizePath($"res://scenes/characters/EnemyBonus.tscn")) as PackedScene;
+		EnemyBonus enemyBonus = res.Instantiate() as EnemyBonus;
+		enemyBonus.Name = "EnemyBonus";
+		enemyBonus.Position = new Vector2(-50f, new Random().Next(200, 800));
+		enemyBonus.SetupData(EnemyManager.GetEnemyData(99));
+		AddChild(enemyBonus);
+
+		enemyBonus.Connect(Enemy.SignalName.Die, new Callable(this, MethodName._on_enemy_die));
 	}
 
 	private void UpdateHighScoreLabel()

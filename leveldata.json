@@ -1,0 +1,20 @@
+[
+    {
+        "Level": 1,
+        "HiveMoveIntervalSec": 2.5,
+        "HiveMoveIntervalFactor": 1.0,
+        "HiveShootIntervalSec": 1.0,
+        "HiveShootIntervalFactor": 1.0,
+        "EnemyBonusSpawnTimeSec": 5.0,
+        "EnemyList": [
+            "8,8,8,8,8,8,8,8",
+            "7,7,7,7,7,7,7,7",
+            "6,6,6,6,6,6,6,6",
+            "5,5,5,5,5,5,5,5",
+            "4,4,4,4,4,4,4,4",
+            "3,3,3,3,3,3,3,3",
+            "2,2,2,2,2,2,2,2",
+            "1,1,1,1,1,1,1,1"
+        ]
+    }
+]

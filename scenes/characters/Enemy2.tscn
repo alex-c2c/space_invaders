@@ -1,36 +1,21 @@
-[gd_scene load_steps=9 format=3 uid="uid://hkcedxvl7ko1"]
+[gd_scene load_steps=11 format=3 uid="uid://cuijh15elshjk"]
 
-[ext_resource type="Script" path="res://scripts/Enemy.cs" id="1_2khuy"]
-[ext_resource type="Texture2D" uid="uid://djj2tmhcplgxn" path="res://sprites/pico8_invaders_sprites_LARGE.png" id="2_5e7rl"]
-[ext_resource type="AudioStream" uid="uid://bcxxa08blxyed" path="res://audio/enemy explosion.wav" id="3_dpkq6"]
-[ext_resource type="AudioStream" uid="uid://cf5sp6lto0nut" path="res://audio/shoot.wav" id="4_uv8uo"]
+[ext_resource type="Script" path="res://scripts/Enemy.cs" id="1_n7t1s"]
+[ext_resource type="Texture2D" uid="uid://djj2tmhcplgxn" path="res://sprites/pico8_invaders_sprites_LARGE.png" id="2_adckk"]
+[ext_resource type="AudioStream" uid="uid://cf5sp6lto0nut" path="res://audio/shoot.wav" id="3_6du5m"]
+[ext_resource type="AudioStream" uid="uid://bcxxa08blxyed" path="res://audio/enemy explosion.wav" id="4_pwbxn"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qfhoj"]
-size = Vector2(8, 8)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_il2u8"]
+size = Vector2(7.8, 8)
 
-[sub_resource type="Animation" id="Animation_xmmwn"]
-resource_name = "Idle"
+[sub_resource type="Animation" id="Animation_87ijc"]
+resource_name = "Default"
 loop_mode = 1
-step = 0.5
+step = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [4, 20]
-}
-
-[sub_resource type="Animation" id="Animation_tn3jc"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("SpriteBody:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -39,36 +24,225 @@ tracks/0/keys = {
 "update": 1,
 "values": [4]
 }
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_cj21y"]
-_data = {
-"Idle": SubResource("Animation_xmmwn"),
-"RESET": SubResource("Animation_tn3jc")
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpriteBody:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpriteBody:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
 }
 
-[node name="Enemy1" type="Area2D"]
-scale = Vector2(5, 5)
-script = ExtResource("1_2khuy")
+[sub_resource type="Animation" id="Animation_brppo"]
+resource_name = "Explode"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteBody:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [66, 50, 66, 50, 66, 50, 34]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpriteBody:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpriteBody:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("CollisionShape2D:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture_filter = 1
-texture = ExtResource("2_5e7rl")
-hframes = 16
-vframes = 16
-frame = 4
+[sub_resource type="Animation" id="Animation_1bhxc"]
+resource_name = "Idle"
+length = 2.0
+loop_mode = 1
+step = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteBody:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [4, 20]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpriteBody:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Vector2(3, 0), Vector2(-1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpriteBody:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("CollisionShape2D:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_r23rw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteBody:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpriteBody:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(3, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpriteBody:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("CollisionShape2D:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fxcsv"]
+_data = {
+"Default": SubResource("Animation_87ijc"),
+"Explode": SubResource("Animation_brppo"),
+"Idle": SubResource("Animation_1bhxc"),
+"RESET": SubResource("Animation_r23rw")
+}
+
+[node name="Enemy2" type="Area2D" node_paths=PackedStringArray("_audioFire", "_audioExplode", "_animationPlayer")]
+scale = Vector2(5, 5)
+script = ExtResource("1_n7t1s")
+_audioFire = NodePath("AudioFire")
+_audioExplode = NodePath("AudioExplode")
+_animationPlayer = NodePath("AnimationPlayer")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1.90735e-07, 1.90735e-07)
-shape = SubResource("RectangleShape2D_qfhoj")
+position = Vector2(0.100001, 0)
+shape = SubResource("RectangleShape2D_il2u8")
+disabled = true
+
+[node name="SpriteBody" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(3, 0)
+texture = ExtResource("2_adckk")
+hframes = 16
+vframes = 16
+frame = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "Idle"
+autoplay = "Default"
 libraries = {
-"": SubResource("AnimationLibrary_cj21y")
+"": SubResource("AnimationLibrary_fxcsv")
 }
 
-[node name="AudioHit" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_dpkq6")
-
 [node name="AudioFire" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_uv8uo")
+stream = ExtResource("3_6du5m")
+
+[node name="AudioExplode" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_pwbxn")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

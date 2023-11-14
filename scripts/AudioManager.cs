@@ -19,6 +19,7 @@ public sealed class AudioManager
 		Cancel = 1,
 		Confirm,
 		Menu,
+		Bonus,
 	}
 
 	private static Dictionary<string, AudioStreamWav> _audioDict;
@@ -40,6 +41,9 @@ public sealed class AudioManager
 		_audioDict["cancel"] = ResourceLoader.Load(Godot.ProjectSettings.GlobalizePath("res://audio/cancel.wav")) as AudioStreamWav;
 		_audioDict["confirm"] = ResourceLoader.Load(Godot.ProjectSettings.GlobalizePath("res://audio/confirm.wav")) as AudioStreamWav;
 		_audioDict["menu"] = ResourceLoader.Load(Godot.ProjectSettings.GlobalizePath("res://audio/menu.wav")) as AudioStreamWav;
+		_audioDict["bonus"] = ResourceLoader.Load(Godot.ProjectSettings.GlobalizePath("res://audio/ufo_highpitch.wav")) as AudioStreamWav;
+
+		_audioDict["bonus"].LoopMode = AudioStreamWav.LoopModeEnum.Forward;
 	}
 
 	public static AudioStreamPlayer PlaySFX(Sfx sfx, Node parent)

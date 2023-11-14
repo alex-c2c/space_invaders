@@ -38,4 +38,17 @@ public partial class Bullet : Area2D
 			QueueFree();
 		}
 	}
+
+	private void _on_area_entered(Area2D area)
+	{
+		if (area is Bullet bullet)
+		{
+			if (bullet.BulletType != BulletType)
+			{
+				bullet.QueueFree();
+
+				QueueFree();
+			}
+		}
+	}
 }

@@ -1,14 +1,14 @@
-[gd_scene load_steps=11 format=3 uid="uid://dw6mncysdvjsx"]
+[gd_scene load_steps=11 format=3 uid="uid://b6ayqgso7xvvg"]
 
-[ext_resource type="Texture2D" uid="uid://djj2tmhcplgxn" path="res://sprites/pico8_invaders_sprites_LARGE.png" id="1_a5geb"]
-[ext_resource type="Script" path="res://scripts/Enemy.cs" id="1_ysysm"]
-[ext_resource type="AudioStream" uid="uid://cf5sp6lto0nut" path="res://audio/shoot.wav" id="2_w2k7w"]
-[ext_resource type="AudioStream" uid="uid://bcxxa08blxyed" path="res://audio/enemy explosion.wav" id="3_gi16l"]
+[ext_resource type="Script" path="res://scripts/Enemy.cs" id="1_l2ipj"]
+[ext_resource type="Texture2D" uid="uid://djj2tmhcplgxn" path="res://sprites/pico8_invaders_sprites_LARGE.png" id="2_asnq8"]
+[ext_resource type="AudioStream" uid="uid://cf5sp6lto0nut" path="res://audio/shoot.wav" id="3_nsta5"]
+[ext_resource type="AudioStream" uid="uid://bcxxa08blxyed" path="res://audio/enemy explosion.wav" id="4_tnmt0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_il2u8"]
 size = Vector2(7.8, 8)
 
-[sub_resource type="Animation" id="Animation_yydek"]
+[sub_resource type="Animation" id="Animation_bfx8a"]
 resource_name = "Default"
 loop_mode = 1
 step = 1.0
@@ -22,7 +22,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [3]
+"values": [9]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -115,7 +115,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [3, 19]
+"values": [9, 25]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -207,15 +207,15 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_fxcsv"]
 _data = {
-"Default": SubResource("Animation_yydek"),
+"Default": SubResource("Animation_bfx8a"),
 "Explode": SubResource("Animation_brppo"),
 "Idle": SubResource("Animation_1bhxc"),
 "RESET": SubResource("Animation_r23rw")
 }
 
-[node name="Enemy1" type="Area2D" node_paths=PackedStringArray("_audioFire", "_audioExplode", "_animationPlayer")]
+[node name="Enemy7" type="Area2D" node_paths=PackedStringArray("_audioFire", "_audioExplode", "_animationPlayer")]
 scale = Vector2(5, 5)
-script = ExtResource("1_ysysm")
+script = ExtResource("1_l2ipj")
 _audioFire = NodePath("AudioFire")
 _audioExplode = NodePath("AudioExplode")
 _animationPlayer = NodePath("AnimationPlayer")
@@ -228,7 +228,7 @@ disabled = true
 [node name="SpriteBody" type="Sprite2D" parent="."]
 texture_filter = 1
 position = Vector2(3, 0)
-texture = ExtResource("1_a5geb")
+texture = ExtResource("2_asnq8")
 hframes = 16
 vframes = 16
 frame = 3
@@ -240,9 +240,9 @@ libraries = {
 }
 
 [node name="AudioFire" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_w2k7w")
+stream = ExtResource("3_nsta5")
 
 [node name="AudioExplode" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_gi16l")
+stream = ExtResource("4_tnmt0")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

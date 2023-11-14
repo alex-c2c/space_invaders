@@ -68,7 +68,7 @@ public partial class Player : Character
 		_audioFire?.Play(0f);
 
 		Bullet newBullet = _bulletRes.Instantiate() as Bullet;
-		newBullet.Position = this.Position - new Vector2(0, _pixelSize.Y * 0.5f);
+		newBullet.Position = this.GlobalPosition - new Vector2(0, _pixelSize.Y * 0.5f);
 		newBullet.BulletType = Bullet.Type.PLAYER;
 		_bulletsNode.AddChild(newBullet);
 
@@ -86,7 +86,6 @@ public partial class Player : Character
 		_audioExplode?.Play(0f);
 
 		await ToSignal(_animationPlayer, "animation_finished");
-		await ToSignal(_audioExplode, "finished");
 
 		if (Lives > 0)
 		{
@@ -100,11 +99,24 @@ public partial class Player : Character
 		}
 		else
 		{
+			Visible = false;
+
 			EmitSignal(SignalName.Die);
 		}
 	}
 
-	public override void _on_area_entered(Area2D area)
+    public override void Reset()
+    {
+        base.Reset();
+
+		Lives = Constants.DEFAULT_PLAYER_LIVES;
+
+		this.Position = _initialPosition;
+
+		_animationPlayer.Play("Idle");
+    }
+
+    public override void _on_area_entered(Area2D area)
 	{
 		if (area is Bullet bullet)
 		{			
@@ -114,6 +126,12 @@ public partial class Player : Character
 
 				bullet.QueueFree();
 			}
+		}
+		else if (area is Enemy enemy)
+		{
+			GetHit();
+
+			enemy.GetHit();
 		}
 	}
 }

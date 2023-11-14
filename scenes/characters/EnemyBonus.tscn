@@ -1,12 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://dw6mncysdvjsx"]
+[gd_scene load_steps=12 format=3 uid="uid://dce2pdc335o4e"]
 
-[ext_resource type="Texture2D" uid="uid://djj2tmhcplgxn" path="res://sprites/pico8_invaders_sprites_LARGE.png" id="1_a5geb"]
-[ext_resource type="Script" path="res://scripts/Enemy.cs" id="1_ysysm"]
-[ext_resource type="AudioStream" uid="uid://cf5sp6lto0nut" path="res://audio/shoot.wav" id="2_w2k7w"]
-[ext_resource type="AudioStream" uid="uid://bcxxa08blxyed" path="res://audio/enemy explosion.wav" id="3_gi16l"]
+[ext_resource type="Script" path="res://scripts/EnemyBonus.cs" id="1_tnmnp"]
+[ext_resource type="Texture2D" uid="uid://djj2tmhcplgxn" path="res://sprites/pico8_invaders_sprites_LARGE.png" id="2_4fkkv"]
+[ext_resource type="AudioStream" uid="uid://cf5sp6lto0nut" path="res://audio/shoot.wav" id="3_117dx"]
+[ext_resource type="AudioStream" uid="uid://bcxxa08blxyed" path="res://audio/enemy explosion.wav" id="4_rcwyg"]
+[ext_resource type="AudioStream" uid="uid://dcs3jletkhagq" path="res://audio/ufo_highpitch.wav" id="5_hkddi"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_il2u8"]
-size = Vector2(7.8, 8)
+size = Vector2(16, 6)
 
 [sub_resource type="Animation" id="Animation_yydek"]
 resource_name = "Default"
@@ -15,31 +16,31 @@ step = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("SpriteBody:frame")
+tracks/0/path = NodePath("SpriteBody:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [3]
+"values": [Vector2(0, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("SpriteBody:position")
+tracks/1/path = NodePath("SpriteBody:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(0, 0)]
+"values": [false]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("SpriteBody:visible")
+tracks/2/path = NodePath("SpriteBodyMain:visible")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -47,6 +48,18 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("CollisionShape2D:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_brppo"]
@@ -98,6 +111,18 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("SpriteBodyMain:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_1bhxc"]
@@ -204,6 +229,18 @@ tracks/3/keys = {
 "update": 1,
 "values": [true]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("SpriteBodyMain:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_fxcsv"]
 _data = {
@@ -213,25 +250,34 @@ _data = {
 "RESET": SubResource("Animation_r23rw")
 }
 
-[node name="Enemy1" type="Area2D" node_paths=PackedStringArray("_audioFire", "_audioExplode", "_animationPlayer")]
+[node name="EnemyBonus" type="Area2D" node_paths=PackedStringArray("_audioBonus", "_audioFire", "_audioExplode", "_animationPlayer")]
 scale = Vector2(5, 5)
-script = ExtResource("1_ysysm")
+script = ExtResource("1_tnmnp")
+_audioBonus = NodePath("AudioBonus")
 _audioFire = NodePath("AudioFire")
 _audioExplode = NodePath("AudioExplode")
 _animationPlayer = NodePath("AnimationPlayer")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.100001, 0)
+position = Vector2(5.72204e-07, 1.43051e-07)
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_il2u8")
 disabled = true
 
 [node name="SpriteBody" type="Sprite2D" parent="."]
 texture_filter = 1
 position = Vector2(3, 0)
-texture = ExtResource("1_a5geb")
+texture = ExtResource("2_4fkkv")
 hframes = 16
 vframes = 16
 frame = 3
+
+[node name="SpriteBodyMain" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(1, 1)
+texture = ExtResource("2_4fkkv")
+region_enabled = true
+region_rect = Rect2(72, 33, 16, 6)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "Default"
@@ -240,9 +286,13 @@ libraries = {
 }
 
 [node name="AudioFire" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_w2k7w")
+stream = ExtResource("3_117dx")
 
 [node name="AudioExplode" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_gi16l")
+stream = ExtResource("4_rcwyg")
+
+[node name="AudioBonus" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_hkddi")
+autoplay = true
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
